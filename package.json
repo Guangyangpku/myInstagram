@@ -15,6 +15,8 @@
     "serve-favicon": "~2.4.2",
     "express-partials": "*",
     "mongoose": "~4.10.5",
-    "bluebird": "~3.5.0"
+    "bluebird": "~3.5.0",
+    "csurf": "~1.9.0",
+    "express-session": "~1.15.3"
   }
 }
