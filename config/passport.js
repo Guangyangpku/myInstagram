@@ -17,6 +17,7 @@ passport.use('local.signup', new LocalStrategy({
   passportField: 'password',
   passReqToCallback: true
 }, function(req, email, password, done){
+  // valodation part
   req.checkBody('email', 'Invalid email').notEmpty().isEmail();
   req.checkBody('password', 'Invalid password').notEmpty().isLength({min:4});
   var errors = req.validationErrors();
@@ -33,7 +34,7 @@ passport.use('local.signup', new LocalStrategy({
       return done(err);
     }
     if (user) {
-      return done(null, false, {message: ['Email is used!']});
+      return done(null, false, req.flash('error', ['email has been used!']));
     }
     var newUser = new User();
     newUser.email = email;
@@ -44,5 +45,24 @@ passport.use('local.signup', new LocalStrategy({
       }
       return done(null, newUser);
     });
+  });
+}));
+
+passport.use('local.signin', new LocalStrategy({
+  usernameField: 'email',
+  passportField: 'password',
+  passReqToCallback: true
+}, function(req, email, password, done){
+  User.findOne({'email': email}, function(err, user){
+    if (err) {
+      return done(err);
+    }
+    if (!user) {
+      return done(null, false, req.flash('error', ['no user found!']));
+    }
+    if (!user.validPassword(password)) {
+      return done(null, false, req.flash('error', ['not right password!']));
+    }
+    return done(null, user);
   });
 }));
