@@ -17,13 +17,13 @@ router.get('/', function(req, res, next) {
     for (var i = 0; i < docs.length; i += chunkSize) {
       productChunks.push(docs.slice(i, i+chunkSize));
     }
-    res.render('index', { title: 'Express', productChunks: productChunks });
+    res.render('index', { productChunks: productChunks });
   });
 });
 
 router.get('/user/signup', function(req, res, next) {
   var messages = req.flash('error');
-  res.render('user/signup', {title: 'login', csrfToken: req.csrfToken(), messages: messages, hasErrors: messages.length > 0});
+  res.render('user/signup', { csrfToken: req.csrfToken(), messages: messages, hasErrors: messages.length > 0});
 });
 
 router.post('/user/signup', passport.authenticate('local.signup', {
