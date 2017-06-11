@@ -15,6 +15,7 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 
 mongoose.connect('mongodb://127.0.0.1:27017/shopping');
+
 require('./config/passport');
 
 var app = express();
@@ -33,11 +34,20 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(validator());
 app.use(cookieParser());
-app.use(session({secret: 'mysupersecret', resave: false, saveUninitialized: false}));
+app.use(session({
+    secret: 'secret',
+    saveUninitialized: false,
+    resave: false
+}));
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(function(req, res, next) {
+  res.locals.login = req.isAuthenticated();
+  next();
+})
 
 app.use('/', index);
 app.use('/user', users);
