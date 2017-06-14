@@ -1,0 +1,13 @@
+<form id="uploadform" action="/upload" method="post" enctype="multipart/form-data">
+    <img id="blah" hidden src="#" alt="your image" width="240" height="240"/>
+    <ul>
+      <li>Upload:      <input type='file' id="imgInp" name='imgInp' /></li>
+      <li>Date:        <input type='text' id='date' name='date' size="20" line-height: "18px"/></li>
+      <li>Tittle:      <input type='text' id='title' name='title' size="30" line-height: "18px"/></li>
+      <li>Description: <input type='text' id='description' name='description' size="100" line-height: "36px"/></li>
+    </ul>
+    <input type="submit" class="btn btn-success" value="submit" id="submitButton">
+</form>
+
+<script type="text/javascript" src="javascripts/uploadfile.js">
+</script>
