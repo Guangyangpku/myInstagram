@@ -2,7 +2,9 @@ var express = require('express');
 var router = express.Router();
 var fs = require('fs');
 var Product = require('../models/product');
-var multer = require('multer')
+var User = require('../models/user');
+
+var multer = require('multer');
 
 var upload = multer({ dest: 'upload/' });
 
@@ -18,6 +20,16 @@ router.get('/', isLoggedIn, function(req, res, next) {
   });
 });
 
+router.get('/mail', isLoggedIn, function(req, res, next) {
+  var id = req.session.passport.user;
+  User.findById(id, function(err, user) {
+    if (!err) {
+      res.render('chat', {username : user.email});
+    }
+  })
+});
+
+/* file upload */
 router.post('/upload', upload.single('imgInp'), function(req, res, next){
   var file = req.file;
   if (file) {
@@ -43,7 +55,6 @@ router.post('/upload', upload.single('imgInp'), function(req, res, next){
           }
         });
       }
-
     });
   }
   res.redirect('/upload');

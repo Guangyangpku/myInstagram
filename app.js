@@ -70,4 +70,28 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+// server connection, could it deployed on port 4000
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
+
+var userNumber = 0;
+io.on('connection', function(socket){
+  userNumber += 1;
+  console.log(userNumber.toString() + ' user connected');
+
+  socket.on('disconnect', function(){
+    userNumber -= 1;
+    console.log(userNumber.toString() + ' user connected');
+  });
+
+  socket.on('chat message', function(msg){
+    console.log('message: ' + msg.from);
+    io.emit('chat message', msg.from + ': ' + msg.msg);
+  });
+});
+
+http.listen(4000, function(){
+  console.log('listening on *:4000');
+});
+
 module.exports = app;
