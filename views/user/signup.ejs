@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-md-4 col-md-offset-4">
-        <h1>Sign Up</h1>
+        <h1 style="padding-top:25%; text-align: center">Sign Up</h1>
         <% if (hasErrors) { %>
             <div class="alert alert-danger">
                 <% messages.forEach(function(message) {%>
@@ -18,7 +18,9 @@
                 <input type="password" id="password" name="password" class="form-control">
             </div>
             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-            <button type="submit" class="btn btn-primary">Sign Up</button>
+            <div style="text-align: center">
+              <button type="submit" class="btn btn-primary">Sign Up</button>
+            </div>
         </form>
     </div>
 </div>

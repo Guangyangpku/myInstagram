@@ -14,7 +14,7 @@ var validator = require('express-validator');
 var index = require('./routes/index');
 var users = require('./routes/users');
 
-mongoose.connect('mongodb://127.0.0.1:27017/shopping');
+mongoose.connect('mongodb://test:test@ds129402.mlab.com:29402/myins');
 
 require('./config/passport');
 

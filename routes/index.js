@@ -7,7 +7,7 @@ var multer = require('multer')
 var upload = multer({ dest: 'upload/' });
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/', isLoggedIn, function(req, res, next) {
   Product.find(function(err, docs) {
     productChunks = [];
     chunkSize = 3;
@@ -27,14 +27,30 @@ router.post('/upload', upload.single('imgInp'), function(req, res, next){
     console.log(type);
     fs.rename(file.destination+file.filename, file.destination+file.filename+type, function(err) {
       if ( err ) console.log('ERROR: ' + err);
-      else console.log('upload success');
+      else {
+        console.log('upload success');
+        console.log(file.destination+file.filename+type);
+        new Product({
+          imagePath: file.destination+file.filename+type,
+          title: 'Gothic',
+          description: req.body.description,
+          price: 10
+        }).save(function(err, result) {
+          if (err) {
+              console.log('save error:' + err);
+          } else {
+              console.log('save success');
+          }
+        });
+      }
+
     });
   }
   res.redirect('/upload');
 });
 
 
-router.get('/upload', function(req, res, next){
+router.get('/upload', isLoggedIn, function(req, res, next){
   res.render('upload');
 });
 
@@ -45,5 +61,5 @@ function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) {
     return next();
   }
-  res.redirect('/');
+  res.redirect('/user/signin');
 }
