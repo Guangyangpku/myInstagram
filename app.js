@@ -75,18 +75,54 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
 var userNumber = 0;
+// connection Dic
+var connectionList = {};
+var offlineMessages = {};
+
 io.on('connection', function(socket){
   userNumber += 1;
   console.log(userNumber.toString() + ' user connected');
+  var socketId = socket.id;
+  connectionList[socketId] = { socket: socket };
+
+  socket.on('join', function (data) {
+    var username = data.username;
+    connectionList[socketId].username = username;
+    console.log('welcome, ' + username);
+    console.log(offlineMessages);
+    if (username in offlineMessages) {
+        offlineMessages[username].forEach(function(msg) {
+          socket.emit('chat message', msg);
+        });
+        delete offlineMessages[username];
+    }
+  });
 
   socket.on('disconnect', function(){
     userNumber -= 1;
-    console.log(userNumber.toString() + ' user connected');
+    console.log(userNumber.toString() + ' user connected.');
+    console.log(connectionList[socketId].username + ' has left.');
+    delete connectionList[socketId];
   });
 
-  socket.on('chat message', function(msg){
-    console.log('message: ' + msg.from);
-    io.emit('chat message', msg.from + ': ' + msg.msg);
+  socket.on('chat message', function(msg) {
+    console.log('message to: ' + msg.to);
+    for (var id in connectionList) {
+      var connection = connectionList[id];
+      console.log('username ' + connection.username);
+      if (connection.username === msg.to) {
+        connection.socket.emit('chat message', msg.from + ' to ' + msg.to + ': ' + msg.msg);
+        socket.emit('chat message', msg.from + ' to ' + msg.to + ': ' + msg.msg);
+        return;
+      }
+    }
+    if (msg.to in offlineMessages) {
+      offlineMessages[msg.to].push(msg.from + ' to ' + msg.to + ': ' + msg.msg);
+    }
+    else {
+      offlineMessages[msg.to] = [msg.from + ' to ' + msg.to + ': ' + msg.msg];
+    }
+    console.log(offlineMessages);
   });
 });
 
