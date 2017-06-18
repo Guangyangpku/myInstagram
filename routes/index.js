@@ -6,7 +6,7 @@ var User = require('../models/user');
 
 var multer = require('multer');
 
-var upload = multer({ dest: 'upload/' });
+var upload = multer({ dest: 'public/images/' });
 
 /* GET home page. */
 router.get('/', isLoggedIn, function(req, res, next) {
@@ -35,29 +35,34 @@ router.post('/upload', upload.single('imgInp'), function(req, res, next){
   if (file) {
     console.log('/upload')
     console.log(req.body);
-    var type = '.' + file.mimetype.split(/\//)[1];
-    console.log(type);
-    fs.rename(file.destination+file.filename, file.destination+file.filename+type, function(err) {
+    var filename = file.destination + file.filename;
+    console.log(filename);
+    var newFilename = filename + '.' + file.mimetype.split(/\//)[1];
+    fs.rename( filename, newFilename, function(err) {
       if ( err ) console.log('ERROR: ' + err);
       else {
         console.log('upload success');
-        console.log(file.destination+file.filename+type);
-        new Product({
-          imagePath: file.destination+file.filename+type,
-          title: 'Gothic',
-          description: req.body.description,
-          price: 10
-        }).save(function(err, result) {
-          if (err) {
-              console.log('save error:' + err);
-          } else {
-              console.log('save success');
+        console.log(newFilename);
+        var id = req.session.passport.user;
+        User.findById(id, function(err, user) {
+          if (!err) {
+            new Product({
+              imagePath: 'images/' + file.filename + '.' + file.mimetype.split(/\//)[1],
+              username: user.email,
+              description: req.body.description,
+            }).save(function(err, result) {
+              if (err) {
+                  console.log('save error:' + err);
+              } else {
+                  console.log('save success');
+              }
+            });
           }
-        });
+        })
       }
     });
   }
-  res.redirect('/upload');
+  res.redirect('/');
 });
 
 

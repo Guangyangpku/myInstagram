@@ -28,7 +28,6 @@
     document.getElementById("reset_btn").setAttribute('hidden', true);
     document.getElementById("submit").setAttribute('hidden', true);
     document.getElementById('upload_text').removeAttribute('hidden');
-
   };
 
   $(function() {

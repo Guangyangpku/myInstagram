@@ -1,43 +1,147 @@
 <!doctype html>
 <html>
   <head>
+    <link rel='stylesheet' href='/stylesheets/friendlychat.css'/>
+ <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.orange-indigo.min.css">
     <title>Socket.IO chat</title>
     <style>
-      * { margin: 0; padding: 0; box-sizing: border-box; }
+
+      /** { margin: 0; padding: 0; box-sizing: border-box; }
       body { font: 13px Helvetica, Arial; }
       form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
       form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
       form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
       #messages { list-style-type: none; margin: 0; padding: 0; }
       #messages li { padding: 5px 10px; }
-      #messages li:nth-child(odd) { background: #eee; }
+      #messages li:nth-child(odd) { background: #eee; }*/
     </style>
   </head>
   <body>
+    <div style="float:left">
+      <input id="new_talk_to" type="text">
+      <button onclick="create_talk_to()">Add</button>
+      <ul id="users_list"></ur>
+    </div>
+    <div class="messages-card" style="float:left;margin-left:100px">
+      <div>
+        <div class="messages">
+          <span class="message-filler"></span>
+        </div>
+        <form id="message-form" action="#">
+            <!--<input id='to' autocomplete="off" placeholder='send to' /> -->
+            <input type="text" id="message">
+            <!--<label class="mdl-textfield__label" for="message">Message...</label>-->
+          <button id="submit" type="submit">Send</button>
+        </form>
+      </div>
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
     <script>
+
+    var screen = new Screen();
+    var users = [];
+    var talk_to = "";
+
+    var selectedUser = function(name){
+      alert(name);
+      talk_to = name;
+      screen.changeScreen(name);
+    };
+
+    var create_talk_to = function(){
+        alert($('#new_talk_to').val());
+        push_talk_to($('#new_talk_to').val());
+        screen.addScreen($('#new_talk_to').val());
+        screen.changeScreen($('#new_talk_to').val());
+    };
+
+    function Screen() {
+      this.current = "";
+      this.screens = {};
+      this.changeScreen = function(newScreen) {
+        if(this.current !== ""){
+          this.screens[this.current].style.display="none";
+          alert(this.screens[this.current]);
+        }
+        // show show
+        this.current = newScreen;
+        this.screens[this.current].style.display="block";
+      };
+      this.addScreen = function(newScreen) {
+        if (!(newScreen in this.screens)) {
+          var temp = document.createElement('div');
+          temp.innerHTML = `<div id="${newScreen}"></div>`;
+          $('.messages').append(temp);
+          this.screens[newScreen] = temp;
+        }
+      };
+    };
+
+    var push_talk_to = function(message_user_name){
+      if(users.indexOf(message_user_name) < 0){
+        //$('#users_list').append($('<li>').text(msg.split(' ')[0]));
+        var button = document.createElement('li');
+        button.innerHTML = '<button onclick="selectedUser(this.textContent)">'+message_user_name+'</button>'
+        $('#users_list').append(button);
+        users.push(message_user_name);
+      }
+
+    };
+
+    var createMessage = function(msg, self){
+      var container = document.createElement('div');
+      container.innerHTML = '<div class="message-container">' +
+                            '<div class="spacing"></div>' +
+                            '<div class="message"></div>' +
+                            '<div class="name"></div></div>'+ '<div style="clear:both"></div>';
+      document.getElementById(talk_to).append(container);
+      if(self){
+        container.querySelector('.message-container').style.cssFloat='right';
+      } else{
+        container.querySelector('.message-container').style.cssFloat='left';
+      }
+      container.querySelector('.name').textContent = '<%= username%>';
+      container.querySelector('.message').textContent = msg;
+    };
+
       $(function () {
-        alert("welcome <%= username %>");
         var socket = io("localhost:4000");
         socket.emit('join', { username: "<%= username %>"});
 
         $('form').submit(function(){
-          socket.emit('chat message', {msg: $('#message').val(), from: "<%= username %>", to: $('#to').val()}); // $('#m').val()
+          socket.emit('chat message', {msg: $('#message').val(), from: "<%= username %>", to: talk_to/*$('#to').val()*/}); // $('#m').val()
+          createMessage($('#message').val(), true);
           $('#message').val('');
           return false;
         });
 
         socket.on('chat message', function(msg){
-          $('#messages').append($('<li>').text(msg));
+          var message_user_name = msg.split(' ')[0];
+          push_talk_to(message_user_name);
+
+          // screen.addScreen(message_user_name);
+
+          //$('#messages').append($('<li>').text(msg));
+          var container = document.createElement('div');
+          container.innerHTML = '<div class="message-container">' +
+                                '<div class="spacing"></div>' +
+                                '<div class="message"></div>' +
+                                '<div class="name"></div></div>'+ '<div style="clear:both"></div>';
+          document.getElementById(talk_to).append(container);
+          container.querySelector('.message-container').style.cssFloat='left';
+          container.querySelector('.name').textContent= msg.split(' ')[0];
+          container.querySelector('.message').textContent = msg.split(':')[1];
         });
       });
     </script>
-    <%= username %>
+    <!-- <%= username %>
     <ul id="messages"></ul>
     <form action="">
       <input id='to' autocomplete="off" placeholder='send to' />
       <input id="message" autocomplete="off" />
       <button>Send</button>
-    </form>
+    </form> -->
+
+
   </body>
 </html>
