@@ -13,6 +13,7 @@ var validator = require('express-validator');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
+var helper = require('./routes/helper');
 
 mongoose.connect('mongodb://test:test@ds129402.mlab.com:29402/myins');
 
@@ -51,6 +52,7 @@ app.use(function(req, res, next) {
 
 app.use('/', index);
 app.use('/user', users);
+app.use('/helper', helper);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -132,3 +134,17 @@ http.listen(4000, function(){
 });
 
 module.exports = app;
+
+// get time
+function getTime() {
+  var date = new Date();
+  var datevalues = [
+    date.getFullYear(),
+    date.getMonth()+1),
+    date.getDate(),
+    date.getHours(),
+    date.getMinutes(),
+    date.getSeconds(),
+  ];
+  return datevalues[0]+'-'+datevalues[1]+'-'+ datevalues[2]+'  '+datevalues[3]+':'+datevalues[4]; // 2017-3-12 12:28
+}

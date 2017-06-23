@@ -97,6 +97,10 @@ main, #messages-card {
   margin-right: 5px;
 }
 
-/*#message-form {
-  bottom: 20px;
-}*/
+
+.userlist{
+	padding: 5px;
+	margin: 5px;
+	height:86%;
+	overflow-y: scroll;
+}

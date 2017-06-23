@@ -1,17 +1,59 @@
 <% productChunks.forEach(function(eles) { %>
-<div class="row">
   <% eles.forEach(function(ele) { %>
-    <div class="col-sm-6 col-md-4">
-      <div class="thumbnail">
-        <img src="<%= ele.imagePath %>" alt="..." class="img-responsive">
+      <div class="thumbnail container" style="width:40%;">
+        <nav class="navbar navbar-default" style="background-color: white; border:none; padding-left:20px; padding-top:10px;padding-bottom-10px;">
+          <div class="navbar-header"><span><h style="margin-right:5px;" class="glyphicon glyphicon-user"></h></span><%= ele.username %></div>
+        </nav>
+        <div style="width:100%; border:none; border-radix: 10px;">
+          <img src="<%= ele.imagePath %>"  style="width:100%; border-radix: 10px; border: none">
+        </div>
         <div class="caption">
-          <h><%= ele.username %></h>
+
           <p><%= ele.description %></p>
-          <p><a href="#" class="btn btn-primary" role="button">Button</a>
-            <a href="#" class="btn btn-success" role="button">Good</a></p>
+          <p><%= ele._id %></p>
+          <p>
+            <a href="#" class="btn btn-primary" role="button"> comment</a>
+            <% if (ele.thumbups.indexOf(username) >= 0) { %>
+              <a class="btn btn-success pull-right" role="button"><i class="fa fa-thumbs-up" aria-hidden="true"></i> Like[<%= ele.thumbups.length %>]</a>
+            <% } else { %>
+              <a id="putups<%= ele._id %>" href="javascript:putUps('<%= ele._id %>');" class="btn btn-success pull-right" role="button"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> Like[<%= ele.thumbups.length %>]</a>
+            <% } %>
+          </p>
+
+          <div class="row">
+              <div class="input-group">
+                <input type="text" class="form-control" placeholder="Search for...">
+                <span class="input-group-btn">
+                  <button class="btn btn-default" type="button">Comment</button>
+                </span>
+              </div><!-- /input-group -->
+          </div><!-- /.row -->
+
         </div>
       </div>
-    </div>
   <% }) %>
-</div>
 <% }) %>
+<script type="text/javascript">
+    var username = '<%= username %>';
+
+    function putUps(oid){
+      var params ={
+                oid: oid,
+                username: username
+            };
+            $.ajax({
+                data: params,
+                url: 'helper/thumbups',
+                type:'post',
+                jsonpCallback: 'callback',
+                success: function(data){
+                  console.log(data);
+                  // $('#putups'+oid).attr("title",data+'个赞');
+                  $('#putups'+oid).html("<i class=\"fa fa-thumbs-up\" aria-hidden=\"true\"></i> Like["+data+"]");  // 这个地方你帮我改一下。。。怎么能把大拇指图标加进来
+                },
+                error: function(jqXHR, textStatus, errorThrown){
+                    alert('error: ' + textStatus + " " + errorThrown);
+                }
+            });
+    }
+</script>

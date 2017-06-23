@@ -12,11 +12,11 @@ var upload = multer({ dest: 'public/images/' });
 router.get('/', isLoggedIn, function(req, res, next) {
   Product.find(function(err, docs) {
     productChunks = [];
-    chunkSize = 3;
+    chunkSize = 1;
     for (var i = 0; i < docs.length; i += chunkSize) {
       productChunks.push(docs.slice(i, i+chunkSize));
     }
-    res.render('index', { productChunks: productChunks });
+    res.render('index', { productChunks: productChunks, username: req.user.email });
   });
 });
 
@@ -65,11 +65,18 @@ router.post('/upload', upload.single('imgInp'), function(req, res, next){
   res.redirect('/');
 });
 
-
 router.get('/upload', isLoggedIn, function(req, res, next){
   res.render('upload');
 });
 
+router.get('/getallusers', function(req, res, next){
+  User.find(function(err, docs){
+  docs.forEach(function(ele){
+    console.log(ele);
+  });
+  res.send(docs);
+});
+});
 
 module.exports = router;
 
