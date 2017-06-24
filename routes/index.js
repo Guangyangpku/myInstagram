@@ -6,16 +6,18 @@ var User = require('../models/user');
 
 var multer = require('multer');
 
-var upload = multer({ dest: 'public/images/' });
+var upload = multer({ dest: 'public/uploads/' });
 
 /* GET home page. */
 router.get('/', isLoggedIn, function(req, res, next) {
   Product.find(function(err, docs) {
     productChunks = [];
-    chunkSize = 1;
-    for (var i = 0; i < docs.length; i += chunkSize) {
-      productChunks.push(docs.slice(i, i+chunkSize));
+    for (var i = 0; i < docs.length ; i ++) {
+      productChunks.push(docs.slice(i, i+1));
     }
+    productChunks.sort(function (a, b) {
+      return parseInt(b[0].timeStamp) - parseInt(a[0].timeStamp);
+    });
     res.render('index', { productChunks: productChunks, username: req.user.email });
   });
 });
@@ -32,6 +34,7 @@ router.get('/mail', isLoggedIn, function(req, res, next) {
 /* file upload */
 router.post('/upload', upload.single('imgInp'), function(req, res, next){
   var file = req.file;
+  var timeStamp = new Date().getTime();
   if (file) {
     console.log('/upload')
     console.log(req.body);
@@ -47,9 +50,10 @@ router.post('/upload', upload.single('imgInp'), function(req, res, next){
         User.findById(id, function(err, user) {
           if (!err) {
             new Product({
-              imagePath: 'images/' + file.filename + '.' + file.mimetype.split(/\//)[1],
+              imagePath: 'uploads/' + file.filename + '.' + file.mimetype.split(/\//)[1],
               username: user.email,
               description: req.body.description,
+              timeStamp: timeStamp
             }).save(function(err, result) {
               if (err) {
                   console.log('save error:' + err);
