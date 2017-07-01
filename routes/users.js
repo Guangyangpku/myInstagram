@@ -11,7 +11,7 @@ router.use(csrfProtection);
 
 router.get('/profile', isLoggedIn, function(req, res, next) {
   console.log(req.session);
-  res.render('user/profile');
+  res.render('user/profile', {header: true});
 });
 
 router.get('/logout', isLoggedIn, function (req, res, next){
@@ -26,7 +26,7 @@ router.use('/', notLoggedIn, function(req, res, next) {
 
 router.get('/signup', function(req, res, next) {
   var messages = req.flash('error');
-  res.render('user/signup', { csrfToken: req.csrfToken(), messages: messages, hasErrors: messages.length > 0});
+  res.render('user/signup', { csrfToken: req.csrfToken(), messages: messages, hasErrors: messages.length > 0, header: true});
 });
 
 router.post('/signup', passport.authenticate('local.signup', {
@@ -37,7 +37,7 @@ router.post('/signup', passport.authenticate('local.signup', {
 
 router.get('/signin', function(req, res, next) {
   var messages = req.flash('error');
-  res.render('user/signin', { csrfToken: req.csrfToken(), messages: messages, hasErrors: messages.length > 0});
+  res.render('user/signin', { csrfToken: req.csrfToken(), messages: messages, hasErrors: messages.length > 0, header: true});
 });
 
 router.post('/signin', passport.authenticate('local.signin', {

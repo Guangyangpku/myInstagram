@@ -18,7 +18,7 @@ router.get('/', isLoggedIn, function(req, res, next) {
     productChunks.sort(function (a, b) {
       return parseInt(b[0].timeStamp) - parseInt(a[0].timeStamp);
     });
-    res.render('index', { productChunks: productChunks, username: req.user.email });
+    res.render('index', { productChunks: productChunks, username: req.user.email, header: true});
   });
 });
 
@@ -26,7 +26,7 @@ router.get('/mail', isLoggedIn, function(req, res, next) {
   var id = req.session.passport.user;
   User.findById(id, function(err, user) {
     if (!err) {
-      res.render('chat', {username : user.email});
+      res.render('chat', {username : user.email, header: false});
     }
   })
 });
@@ -70,7 +70,7 @@ router.post('/upload', upload.single('imgInp'), function(req, res, next){
 });
 
 router.get('/upload', isLoggedIn, function(req, res, next){
-  res.render('upload');
+  res.render('upload', {header: true});
 });
 
 router.get('/getallusers', function(req, res, next){

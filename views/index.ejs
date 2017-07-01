@@ -62,6 +62,9 @@
     }
 
     function addComment(oid){
+      if ($('#comment'+oid).val() === "") {
+        return;
+      }
       var params ={
                 oid: oid,
                 username: username,
