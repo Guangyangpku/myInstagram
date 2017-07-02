@@ -134,17 +134,3 @@ http.listen(4000, function(){
 });
 
 module.exports = app;
-
-// get time
-function getTime() {
-  var date = new Date();
-  var datevalues = [
-    date.getFullYear(),
-    date.getMonth()+1,
-    date.getDate(),
-    date.getHours(),
-    date.getMinutes(),
-    date.getSeconds(),
-  ];
-  return datevalues[0]+'-'+datevalues[1]+'-'+ datevalues[2]+'  '+datevalues[3]+':'+datevalues[4]; // 2017-3-12 12:28
-}

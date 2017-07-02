@@ -14,21 +14,21 @@
           <p>
             <!-- <a href="#" class="btn btn-primary" role="button"> comment</a> -->
             <% if (ele.thumbups.indexOf(username) >= 0) { %>
-              <a class="btn btn-success" role="button"><i class="fa fa-heart fa-lg" aria-hidden="true" style="color:red; margin-right:5px"></i><%= ele.thumbups.length %> likes</a>
+              <a class="btn btn-success" role="button"><i class="fa fa-heart fa-lg" aria-hidden="true" style="color:red; margin-right:3px"></i><%= ele.thumbups.length %> likes</a>
             <% } else { %>
-              <a id="putups<%= ele._id %>" href="javascript:putUps('<%= ele._id %>');" class="btn btn-success" role="button"><i class="fa fa-heart-o fa-lg" aria-hidden="true" style=" margin-right:5px"></i><%= ele.thumbups.length %> likes</a>
+              <a id="putups<%= ele._id %>" href="javascript:putUps('<%= ele._id %>');" class="btn btn-success" role="button"><i class="fa fa-heart-o fa-lg" aria-hidden="true" style="margin-right:3px"></i><%= ele.thumbups.length %> likes</a>
             <% } %>
           </p>
-          <ul id="comments<%= ele._id %>">
+          <div id="comments<%= ele._id %>">
             <% ele.comments.forEach(function(comment) { %>
-              <li><%= comment.username %>: <%= comment.description %></li>
+              <p><strong><%= comment.username %></strong>: <%= comment.description %></p>
             <% }); %>
-          </ul>
+          </div>
           <div class="row" style="border-top: 1px solid #f5f5f5;">
               <div class="input-group">
                 <input id="comment<%= ele._id %>" type="text" class="comment_text" placeholder=" Add a comment" >
                 <span class="input-group-btn">
-                  <a id="addcomment<%= ele._id %>" href="javascript:addComment('<%= ele._id %>');" class="btn btn-default" role="button"><i class="fa fa-comment-o fa-lg" aria-hidden="true"></i></a>
+                  <a id="addcomment<%= ele._id %>" href="javascript:addComment('<%= ele._id %>');" class="post_btn btn-default" role="button"><i class="fa fa-comment-o fa-lg" aria-hidden="true"></i></a>
                 </span>
               </div><!-- /input-group -->
           </div><!-- /.row -->
@@ -62,9 +62,6 @@
     }
 
     function addComment(oid){
-      if ($('#comment'+oid).val() === "") {
-        return;
-      }
       var params ={
                 oid: oid,
                 username: username,
@@ -77,7 +74,7 @@
                 type:'post',
                 jsonpCallback: 'callback',
                 success: function(data){
-                  $('#comments'+oid).append("<li>"+data+"</li>");
+                  $('#comments'+oid).append("<p><strong>"+data.split(":")[0]+"</strong>:"+data.split(":")[1] + "</p>");
                 },
                 error: function(jqXHR, textStatus, errorThrown){
                     alert('error: ' + textStatus + " " + errorThrown);

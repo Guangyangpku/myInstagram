@@ -3,6 +3,7 @@ var router = express.Router();
 var fs = require('fs');
 var Product = require('../models/product');
 var User = require('../models/user');
+var moment = require('moment')
 
 var multer = require('multer');
 
@@ -35,6 +36,7 @@ router.get('/mail', isLoggedIn, function(req, res, next) {
 router.post('/upload', upload.single('imgInp'), function(req, res, next){
   var file = req.file;
   var timeStamp = new Date().getTime();
+
   if (file) {
     console.log('/upload')
     console.log(req.body);
@@ -50,10 +52,11 @@ router.post('/upload', upload.single('imgInp'), function(req, res, next){
         User.findById(id, function(err, user) {
           if (!err) {
             new Product({
-              imagePath: 'uploads/' + file.filename + '.' + file.mimetype.split(/\//)[1],
+              imagePath: '/uploads/' + file.filename + '.' + file.mimetype.split(/\//)[1],
               username: user.email,
               description: req.body.description,
-              timeStamp: timeStamp
+              timeStamp: timeStamp,
+              timeDate: stampToDate(timeStamp)
             }).save(function(err, result) {
               if (err) {
                   console.log('save error:' + err);
@@ -89,4 +92,18 @@ function isLoggedIn(req, res, next) {
     return next();
   }
   res.redirect('/user/signin');
+}
+
+// get time
+function stampToDate(timeStamp) {
+  var date = new Date(timeStamp);
+  var datevalues = [
+    date.getFullYear(),
+    date.getMonth()+1,
+    date.getDate(),
+    date.getHours(),
+    date.getMinutes(),
+    date.getSeconds(),
+  ];
+  return datevalues[0]+'-'+datevalues[1]+'-'+ datevalues[2]+'  '+datevalues[3]+':'+datevalues[4]; // 2017-3-12 12:28
 }

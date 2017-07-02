@@ -1,1 +1,19 @@
-<h1>User Profile</h1>
+<% productChunks.forEach(function(eles) { %>
+  <% eles.forEach(function(ele) { %>
+      <div class="thumbnail container" style="width:40%;">
+        <nav class="navbar navbar-default" style="background-color: white; border:none; padding-left:20px; padding-top:10px;padding-bottom-10px;">
+          <div class="navbar-header"><span><i class="fa fa-calendar" aria-hidden="true" style="margin-right: 10px"></i></span><%= ele.timeDate || ele.dateTime %></div>
+        </nav>
+        <div style="width:cover; border:none; border-radix: 10px;">
+          <img src="<%= ele.imagePath %>"  style="width:100%; border: none">
+        </div>
+        <div class="caption">
+          <p><%= ele.description %></p>
+        </div>
+      </div>
+  <% }) %>
+<% }) %>
+<script type="text/javascript">
+
+
+</script>

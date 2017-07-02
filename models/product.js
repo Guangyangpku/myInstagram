@@ -10,7 +10,8 @@ var schema = new Schema({
             username: String,
             description: String
         }],
-  timeStamp: {type: String, required: true}
+  timeStamp: {type: String, required: true},
+  timeDate: {type: String, required: true}
 });
 
 module.exports = mongoose.model('Product', schema);
