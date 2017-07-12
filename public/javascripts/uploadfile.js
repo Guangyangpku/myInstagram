@@ -23,11 +23,13 @@
 
   var resetPhoto = function(){
     document.getElementById("chooseFile").value = "";
-    document.getElementById("label_img").src="http://localhost:3000/images/upload.gif";
+    var label_img = document.getElementById("label_img");
+    label_img.src="http://localhost:3000/images/upload.gif";
     document.getElementById("description").setAttribute('hidden', true);
     document.getElementById("reset_btn").setAttribute('hidden', true);
     document.getElementById("submit").setAttribute('hidden', true);
     document.getElementById('upload_text').removeAttribute('hidden');
+    document.getElementById('chosenImage').remove();
   };
 
   $(function() {
@@ -42,9 +44,11 @@
          var files = this.files;
          var reader = new FileReader();
          reader.onload= function(e){
-           var img = document.getElementById('label_img');
+           var img = document.createElement('img');
+           img.id = "chosenImage"
            img.src= e.target.result;
-           img.style.width='400px';
+           document.getElementById('highest_div').append(img);
+           document.getElementsByClassName('box__input')[0].setAttribute('hidden',true);
            document.getElementById('upload_text').setAttribute('hidden',true);
            document.getElementById('description').removeAttribute('hidden');
            document.getElementById('submit').removeAttribute('hidden');

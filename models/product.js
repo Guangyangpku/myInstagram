@@ -11,7 +11,6 @@ var schema = new Schema({
             description: String
         }],
   timeStamp: {type: String, required: true},
-  timeDate: {type: String, required: true}
 });
 
 module.exports = mongoose.model('Product', schema);

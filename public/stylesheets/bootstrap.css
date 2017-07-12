@@ -3293,7 +3293,7 @@ select[multiple].input-lg,textarea.input-lg {
   }
 
   .form-inline .input-group .form-control,.form-inline .input-group .input-group-addon,.form-inline .input-group .input-group-btn {
-    width: 100%;
+    width: 90%;
   }
 
   .form-inline .input-group>.form-control {
@@ -3514,7 +3514,7 @@ a.btn.disabled,fieldset[disabled] a.btn {
 
 .btn-success.focus,.btn-success:focus {
   color: #444;
-  background-color: white;
+  background-color:white;
   border-color: white;
 }
 
@@ -3531,7 +3531,7 @@ a.btn.disabled,fieldset[disabled] a.btn {
 }
 
 .btn-success.active.focus,.btn-success.active:focus,.btn-success.active:hover,.btn-success:active.focus,.btn-success:active:focus,.btn-success:active:hover,.open>.dropdown-toggle.btn-success.focus,.open>.dropdown-toggle.btn-success:focus,.open>.dropdown-toggle.btn-success:hover {
-  color: black;
+  color: #fff;
   background-color: white;
   border-color: white;
 }
@@ -3542,12 +3542,12 @@ a.btn.disabled,fieldset[disabled] a.btn {
 
 .btn-success.disabled.focus,.btn-success.disabled:focus,.btn-success.disabled:hover,.btn-success[disabled].focus,.btn-success[disabled]:focus,.btn-success[disabled]:hover,fieldset[disabled] .btn-success.focus,fieldset[disabled] .btn-success:focus,fieldset[disabled] .btn-success:hover {
   background-color: white;
-  border-color: white;
+  border-color: #4cae4c;
 }
 
 .btn-success .badge {
-  color: black;
-  background-color: #fff;
+  color: #5cb85c;
+  background-color: white;
 }
 
 .btn-info {
@@ -5393,8 +5393,8 @@ a.badge:focus,a.badge:hover {
   margin-bottom: 20px;
   line-height: 1.42857143;
   background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  border:none;
+  border-radius: 10px;
   -webkit-transition: border .2s ease-in-out;
   -o-transition: border .2s ease-in-out;
   transition: border .2s ease-in-out;
@@ -6072,7 +6072,8 @@ a.list-group-item-danger.active,a.list-group-item-danger.active:focus,a.list-gro
 }
 
 .panel-primary>.panel-heading .badge {
-  color: #337ab7;
+  colo
+  r: #337ab7;
   background-color: #fff;
 }
 
@@ -6224,25 +6225,6 @@ a.list-group-item-danger.active,a.list-group-item-danger.active:focus,a.list-gro
   border-radius: 3px;
 }
 
-.close {
-  float: right;
-  font-size: 21px;
-  font-weight: 700;
-  line-height: 1;
-  color: #000;
-  text-shadow: 0 1px 0 #fff;
-  filter: alpha(opacity=20);
-  opacity: .2;
-}
-
-.close:focus,.close:hover {
-  color: #000;
-  text-decoration: none;
-  cursor: pointer;
-  filter: alpha(opacity=50);
-  opacity: .5;
-}
-
 button.close {
   -webkit-appearance: none;
   padding: 0;
@@ -6255,17 +6237,63 @@ button.close {
   overflow: hidden;
 }
 
+
 .modal {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 1050;
-  display: none;
-  overflow: hidden;
-  -webkit-overflow-scrolling: touch;
-  outline: 0;
+       display: none; /* Hidden by default */
+       position: fixed; /* Stay in place */
+       z-index: 1; /* Sit on top */
+       padding-top: 100px; /* Location of the box */
+       left: 0;
+       top: 0;
+       width: 100%; /* Full width */
+       height: 100%; /* Full height */
+       overflow: auto; /* Enable scroll if needed */
+       background-color: rgb(0,0,0); /* Fallback color */
+       background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+   }
+
+.modal-content {
+        margin: auto;
+        display: block;
+        width: 50%;
+        max-width: 500px;
+    }
+
+    /* Caption of Modal Image */
+#caption {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+    text-align: center;
+    color: #ccc;
+    padding: 10px 0;
+    height: 150px;
+}
+
+.close {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.close:hover,
+.close:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Add Animation */
+.modal-content, #caption {
+    -webkit-animation-name: zoom;
+    -webkit-animation-duration: 0.6s;
+    animation-name: zoom;
+    animation-duration: 0.6s;
 }
 
 .modal.fade .modal-dialog {

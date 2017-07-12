@@ -3,7 +3,6 @@ var router = express.Router();
 var fs = require('fs');
 var Product = require('../models/product');
 var User = require('../models/user');
-var moment = require('moment')
 
 var multer = require('multer');
 
@@ -19,7 +18,7 @@ router.get('/', isLoggedIn, function(req, res, next) {
     productChunks.sort(function (a, b) {
       return parseInt(b[0].timeStamp) - parseInt(a[0].timeStamp);
     });
-    res.render('index', { productChunks: productChunks, username: req.user.email, header: true});
+    res.render('index', { productChunks: productChunks, username: req.user.email });
   });
 });
 
@@ -27,7 +26,7 @@ router.get('/mail', isLoggedIn, function(req, res, next) {
   var id = req.session.passport.user;
   User.findById(id, function(err, user) {
     if (!err) {
-      res.render('chat', {username : user.email, header: false});
+      res.render('chat', {username : user.email});
     }
   })
 });
@@ -36,7 +35,6 @@ router.get('/mail', isLoggedIn, function(req, res, next) {
 router.post('/upload', upload.single('imgInp'), function(req, res, next){
   var file = req.file;
   var timeStamp = new Date().getTime();
-
   if (file) {
     console.log('/upload')
     console.log(req.body);
@@ -55,8 +53,7 @@ router.post('/upload', upload.single('imgInp'), function(req, res, next){
               imagePath: '/uploads/' + file.filename + '.' + file.mimetype.split(/\//)[1],
               username: user.email,
               description: req.body.description,
-              timeStamp: timeStamp,
-              timeDate: stampToDate(timeStamp)
+              timeStamp: timeStamp
             }).save(function(err, result) {
               if (err) {
                   console.log('save error:' + err);
@@ -73,16 +70,38 @@ router.post('/upload', upload.single('imgInp'), function(req, res, next){
 });
 
 router.get('/upload', isLoggedIn, function(req, res, next){
-  res.render('upload', {header: true});
+  res.render('upload');
 });
 
 router.get('/getallusers', function(req, res, next){
-  User.find(function(err, docs){
-  docs.forEach(function(ele){
-    console.log(ele);
-  });
-  res.send(docs);
+    User.find(function(err, docs){
+      docs.forEach(function(ele){
+        console.log(ele);
+      });
+      res.send(docs);
+    });
 });
+
+router.post('/update/', upload.any(), function(req, res){
+  Product.findById({_id:req.body.id}, function (err, doc){
+    doc.description = req.body.description;
+    doc.timeStamp = new Date().getTime();
+    doc.save();
+  });
+  res.redirect('/user/profile');
+});
+
+router.delete('/delete/:id', function(req, res){
+  //delete the requested item from mongodb
+  console.log(req.params.id);
+  Product.findByIdAndRemove({_id:req.params.id}, function(err, docs) {
+    console.log(docs);
+    if(err) {
+      res.json(err);
+    } else {
+      res.json(docs);
+    }
+  });
 });
 
 module.exports = router;
@@ -92,18 +111,4 @@ function isLoggedIn(req, res, next) {
     return next();
   }
   res.redirect('/user/signin');
-}
-
-// get time
-function stampToDate(timeStamp) {
-  var date = new Date(timeStamp);
-  var datevalues = [
-    date.getFullYear(),
-    date.getMonth()+1,
-    date.getDate(),
-    date.getHours(),
-    date.getMinutes(),
-    date.getSeconds(),
-  ];
-  return datevalues[0]+'-'+datevalues[1]+'-'+ datevalues[2]+'  '+datevalues[3]+':'+datevalues[4]; // 2017-3-12 12:28
 }
